@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model navigationitem {
+  id        Int      @id @default(autoincrement())
+  label     String
+  href      String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model PriceCategory {
+  id        Int         @id @default(autoincrement())
+  category  String
+  order     Int         @default(0)
+  isActive  Boolean     @default(true)
+
+  items     PriceItem[]
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model PriceItem {
+  id             Int           @id @default(autoincrement())
+  service        String
+  price          String
+
+  categoryId     Int
+  category       PriceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  order          Int           @default(0)
+  isActive       Boolean       @default(true)
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  src       String
+  publicId  String?  @map("public_id")
+  alt       String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String
+  subject   String
+  message   String
+  status    String   @default("new")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
